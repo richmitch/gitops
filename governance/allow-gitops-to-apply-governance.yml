@@ -1,0 +1,88 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: allow-gitops-to-apply-governance
+  namespace: governance-policies
+spec:
+  disabled: false
+  remediationAction: enforce
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: governance-role
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: mustonlyhave
+              objectDefinition:
+                name:
+                apiVersion: rbac.authorization.k8s.io/v1
+                kind: Role
+                metadata:
+                  name: custom-openshift-gitops-governance-role
+                  namespace: openshift-gitops
+                rules:
+                  - apiGroups:
+                      - policy.open-cluster-management.io
+                    resources:
+                      - policies
+                      - placementbindings
+                    verbs:
+                      - get
+                      - list
+                      - watch
+                      - delete
+                      - patch
+                      - create
+          remediationAction: inform
+          severity: high
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: governance-rolebinding
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - default
+          object-templates:
+            - complianceType: mustonlyhave
+              objectDefinition:
+                name:
+                apiVersion: rbac.authorization.k8s.io/v1
+                kind: RoleBinding
+                metadata:
+                  name: custom-openshift-gitops-governance-rb
+                  namespace: openshift-gitops
+                roleRef:
+                  name: custom-openshift-gitops-governance-role
+                  apiGroup: rbac.authorization.k8s.io
+                  kind: Role
+                subjects:
+                  - name: openshift-gitops-argocd-application-controller
+                    namespace: openshift-gitops
+                    kind: ServiceAccount
+          remediationAction: inform
+          severity: high
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: allow-gitops-to-apply-governance-placement
+  namespace: governance-policies
+placementRef:
+  name: local-cluster
+  apiGroup: apps.open-cluster-management.io
+  kind: PlacementRule
+subjects:
+  - name: allow-gitops-to-apply-governance
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
