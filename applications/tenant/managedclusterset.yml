@@ -2,6 +2,8 @@ apiVersion: cluster.open-cluster-management.io/v1beta1
 kind: ManagedClusterSet
 metadata:
   name: tenant
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10" 
 spec:
   clusterSelector:
     selectorType: LegacyClusterSetLabel 
