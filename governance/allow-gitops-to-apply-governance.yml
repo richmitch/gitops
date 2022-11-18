@@ -61,7 +61,7 @@ spec:
                 kind: RoleBinding
                 metadata:
                   name: custom-openshift-gitops-governance-rb
-                  namespace: openshift-gitops
+                  namespace: governance-policies
                 roleRef:
                   name: custom-openshift-gitops-governance-role
                   apiGroup: rbac.authorization.k8s.io
