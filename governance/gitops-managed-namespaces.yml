@@ -24,6 +24,23 @@ spec:
                     argocd.argoproj.io/managed-by: openshift-gitops
           remediationAction: inform
           severity: high
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: gitops-tests-namespace
+        spec:
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                kind: Namespace
+                metadata:
+                  name: governance-policies
+                  labels:
+                    argocd.argoproj.io/managed-by: openshift-gitops
+          remediationAction: inform
+          severity: high
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
