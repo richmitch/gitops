@@ -3,6 +3,8 @@ kind: Policy
 metadata:
   name: install-fileintegrity-operator
   namespace: governance-policies
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   disabled: false
   remediationAction: enforce
