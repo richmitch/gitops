@@ -3,8 +3,8 @@ kind: Policy
 metadata:
   name: install-compliance-operator
   namespace: governance-policies
-annotations:
-  argocd.argoproj.io/compare-options: IgnoreExtraneous
+  annotations:
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 spec:
   disabled: false
   remediationAction: enforce
