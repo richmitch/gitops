@@ -1,0 +1,40 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: manage-clusterset-tenants
+  namespace: governance-policies
+spec:
+  disabled: false
+  remediationAction: inform
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: include-local-cluster
+        spec:
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: cluster.open-cluster-management.io/v1
+                kind: ManagedCluster
+                metadata:
+                  name: local-cluster
+                  labels:
+                    cluster.open-cluster-management.io/clusterset: tenant
+          remediationAction: inform
+          severity: high
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: manage-clusterset-tenants-placement
+  namespace: governance-policies
+placementRef:
+  name: local-cluster
+  apiGroup: apps.open-cluster-management.io
+  kind: PlacementRule
+subjects:
+  - name: manage-clusterset-tenants
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
