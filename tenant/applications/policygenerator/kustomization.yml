@@ -1,0 +1,4 @@
+namespace: governance-policies
+
+generators:
+  - policy-generator-config.yaml
