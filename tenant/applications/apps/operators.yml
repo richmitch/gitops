@@ -11,7 +11,7 @@ spec:
   source:
     directory:
       recurse: false
-    path: ./tenant/operators
+    path: ./tenant/operator
     repoURL: https://github.com/richmitch/gitops.git
     targetRevision: HEAD
   syncPolicy:
